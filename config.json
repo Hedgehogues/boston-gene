@@ -1,0 +1,40 @@
+
+{
+  "service": "GDC_downloader",
+  "db_path": "data/genes_expression.sqlite",
+  "files": {
+    "filters": {
+      "op": "and",
+      "content": [
+          {
+              "op": "=",
+              "content": {
+                  "field": "files.experimental_strategy",
+                  "value": "RNA-Seq"
+              }
+          },
+          {
+              "op": "=",
+              "content": {
+                  "field": "type",
+                  "value": "gene_expression"
+              }
+          },
+          {
+              "op": "=",
+              "content": {
+                  "field": "analysis.workflow_type",
+                  "value": "HTSeq - FPKM-UQ"
+              }
+          }
+      ]
+    },
+    "endpoint": "https://api.gdc.cancer.gov/files",
+    "fields": "cases.project.project_id,cases.case_id",
+    "batch_size": 1000
+  },
+  "data": {
+    "endpoint": "https://api.gdc.cancer.gov/data",
+    "path": "data/"
+  }
+}
