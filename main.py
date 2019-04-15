@@ -1,11 +1,13 @@
 import re
-from flask import Flask, request, logging
 import json
 import argparse
+
+from flask import Flask, request, logging
+
 from client.db import SQLiteClient
 from client.gdc import FilesClient, DataClient
-from draw.hist import build_hist
 from processor.archives import Processor
+from draw.hist import build_hist
 
 # TODO: add swagger
 # TODO: may be add lru
