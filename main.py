@@ -49,6 +49,9 @@ def download():
     project_id = request.args.get("project_id")
     if project_id is None:
         return "bad request", 400
+    count = request.args.get("count")
+    if count is not None and count.isdigit() and int(count) <= 1:
+        return "count parameter must be > 1", 400
     app.logger.info("request to gdc api (files)")
     try:
         files = files_client.get_files(project_id)
@@ -57,7 +60,6 @@ def download():
         return "internal server error", 500
 
     ids = [fId['id'] for fId in files]
-    count = request.args.get("count")
     if count is not None and count.isdigit():
         ids = ids[:int(count)]
         files = files[:int(count)]
