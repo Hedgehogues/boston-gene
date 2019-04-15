@@ -8,6 +8,8 @@ import uuid
 class Processor:
     """
     Processor read archive from response and extract them to DB (with temporary file)
+
+    :param
     """
     def __init__(self, data_path, db):
         self.db = db

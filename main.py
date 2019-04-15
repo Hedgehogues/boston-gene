@@ -1,4 +1,3 @@
-import re
 import json
 import argparse
 
@@ -66,16 +65,13 @@ def download():
     app.logger.info("request to gdc api (data)")
     # TODO: check data in database
     try:
-        response = data_client.get_files(ids)
+        content, output_file = data_client.get_files(ids)
     except Exception as e:
         app.logger.error("gdc api (data) error (error='%s')" % str(e))
         return "internal server error", 500
 
     app.logger.info("extracting data")
     try:
-        content = response.content
-        header = response.headers["Content-Disposition"]
-        output_file = re.findall("filename=(.+)", header)[0]
         arch_processor.run(content, files, output_file)
     except Exception as e:
         app.logger.error("processor error (error='%s')" % str(e))

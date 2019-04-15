@@ -7,6 +7,9 @@ from matplotlib.figure import Figure
 def build_hist(res, bins):
     """
     build_hist get list of values and create Response for http-request as image
+
+    :param res: list of values
+    :param bins: hist's param
     """
     # TODO: move params image generation to config
     fig = Figure(figsize=(15, 10))
