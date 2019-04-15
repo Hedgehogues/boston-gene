@@ -2,6 +2,7 @@ import os
 import shutil
 import pandas as pd
 from tqdm import tqdm
+import uuid
 
 
 class Processor:
@@ -9,6 +10,9 @@ class Processor:
         self.db = db
         self.data_path = data_path
         self.__arch_dir = "archives/"
+
+    def __get_arch_dir(self):
+        return self.__arch_dir + str(uuid.uuid4())
 
     @staticmethod
     def __extract_file(files, path, name):
@@ -55,13 +59,15 @@ class Processor:
         with open(self.data_path + file_name, "wb") as output_file:
             output_file.write(content)
 
-        if os.path.exists(self.data_path + self.__arch_dir):
-            shutil.rmtree(self.data_path + self.__arch_dir)
-        os.mkdir(self.data_path + self.__arch_dir)
-        os.system("tar -xzf %s -C %s" % (self.data_path + file_name, self.data_path + self.__arch_dir))
-        self.__extract_all_arch(self.data_path + self.__arch_dir, files_d)
+        arch_dir = self.__get_arch_dir()
+
+        if os.path.exists(self.data_path + arch_dir):
+            shutil.rmtree(self.data_path + arch_dir)
+        os.mkdir(self.data_path + arch_dir)
+        os.system("tar -xzf %s -C %s" % (self.data_path + file_name, self.data_path + arch_dir))
+        self.__extract_all_arch(self.data_path + arch_dir, files_d)
         self.set_to_db(files_d)
-        if os.path.exists(self.data_path + self.__arch_dir):
-            shutil.rmtree(self.data_path + self.__arch_dir)
+        if os.path.exists(self.data_path + arch_dir):
+            shutil.rmtree(self.data_path + arch_dir)
         if os.path.exists(self.data_path + file_name):
             os.remove(self.data_path + file_name)
