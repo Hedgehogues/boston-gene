@@ -5,6 +5,9 @@ from matplotlib.figure import Figure
 
 
 def build_hist(res, bins):
+    """
+    build_hist get list of values and create Response for http-request as image
+    """
     # TODO: move params image generation to config
     fig = Figure(figsize=(15, 10))
     axis = fig.add_subplot(1, 1, 1)

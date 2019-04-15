@@ -6,6 +6,9 @@ import uuid
 
 
 class Processor:
+    """
+    Processor read archive from response and extract them to DB (with temporary file)
+    """
     def __init__(self, data_path, db):
         self.db = db
         self.data_path = data_path
@@ -45,7 +48,7 @@ class Processor:
             }
         return d
 
-    def set_to_db(self, files):
+    def __set_to_db(self, files):
         for f in tqdm(files.items(), desc="count files"):
             df = pd.read_csv(f[1]["path_to_file"], sep='\t', header=None)
             df["project_id"] = f[1]["project_id"]
@@ -54,6 +57,23 @@ class Processor:
             self.db.insert_with_repl(df)
 
     def run(self, content, files, file_name):
+        """
+
+        :param content: this is response.content iterator
+        :param files: all files in format
+            {
+                "cases": [
+                    {
+                        "project": {
+                            "project_id": string
+                        },
+                        "case_id": string
+                    }
+                ],
+                "id": string
+            },
+        :param file_name: file to archive from gdc-server
+        """
         # TODO: check CheckSum
         files_d = self.__to_dict_files(files)
         with open(self.data_path + file_name, "wb") as output_file:
@@ -66,7 +86,7 @@ class Processor:
         os.mkdir(self.data_path + arch_dir)
         os.system("tar -xzf %s -C %s" % (self.data_path + file_name, self.data_path + arch_dir))
         self.__extract_all_arch(self.data_path + arch_dir, files_d)
-        self.set_to_db(files_d)
+        self.__set_to_db(files_d)
         if os.path.exists(self.data_path + arch_dir):
             shutil.rmtree(self.data_path + arch_dir)
         if os.path.exists(self.data_path + file_name):

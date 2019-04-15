@@ -1,4 +1,3 @@
-
 {
   "service": "GDC_downloader",
   "db_path": "data/genes_expression.sqlite",
